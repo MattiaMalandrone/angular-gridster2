@@ -11,6 +11,7 @@ export class GridsterRenderer {
   }
 
   destroy(): void {
+    // @ts-ignore
     delete this.gridster;
   }
 
@@ -29,7 +30,7 @@ export class GridsterRenderer {
       }
 
       renderer.setStyle(el, 'margin-bottom', this.gridster.$options.margin + 'px');
-      renderer.setStyle(el, 'margin-right', '');
+      renderer.setStyle(el, DirTypes.LTR ? 'margin-right' : 'margin-left', '');
     } else {
       const x = Math.round(this.gridster.curColWidth * item.x);
       const y = Math.round(this.gridster.curRowHeight * item.y);
@@ -59,7 +60,7 @@ export class GridsterRenderer {
       }
 
       renderer.setStyle(el, 'margin-bottom', marginBottom);
-      renderer.setStyle(el, 'margin-right', marginRight);
+      renderer.setStyle(el, DirTypes.LTR ? 'margin-right' : 'margin-left', marginRight);
     }
   }
 

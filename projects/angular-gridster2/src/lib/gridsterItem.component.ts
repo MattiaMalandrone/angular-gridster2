@@ -58,7 +58,7 @@ export class GridsterItemComponent implements OnInit, OnDestroy, OnChanges, Grid
     this.resize = new GridsterResizable(this, gridster, this.zone);
   }
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.gridster.addItem(this);
   }
 
@@ -93,10 +93,13 @@ export class GridsterItemComponent implements OnInit, OnDestroy, OnChanges, Grid
 
   ngOnDestroy(): void {
     this.gridster.removeItem(this);
+    // @ts-ignore
     delete this.gridster;
     this.drag.destroy();
+    // @ts-ignore
     delete this.drag;
     this.resize.destroy();
+    // @ts-ignore
     delete this.resize;
   }
 
@@ -111,6 +114,9 @@ export class GridsterItemComponent implements OnInit, OnDestroy, OnChanges, Grid
     const left = this.$item.x * this.gridster.curColWidth;
     const width = this.$item.cols * this.gridster.curColWidth - this.gridster.$options.margin;
     const height = this.$item.rows * this.gridster.curRowHeight - this.gridster.$options.margin;
+
+    this.top = top;
+    this.left = left;
 
     if (!this.init && width > 0 && height > 0) {
       this.init = true;
@@ -131,8 +137,6 @@ export class GridsterItemComponent implements OnInit, OnDestroy, OnChanges, Grid
         this.gridster.options.itemResizeCallback(this.item, this);
       }
     }
-    this.top = top;
-    this.left = left;
   }
 
   itemChanged(): void {

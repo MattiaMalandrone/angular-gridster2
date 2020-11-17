@@ -22,6 +22,7 @@ export class GridsterPush {
     fromNorth: ((gridsterItemCollide: GridsterItemComponentInterface, gridsterItem: GridsterItemComponentInterface) => boolean)[],
     fromSouth: ((gridsterItemCollide: GridsterItemComponentInterface, gridsterItem: GridsterItemComponentInterface) => boolean)[]
   };
+  private iteration = 0;
 
   constructor(gridsterItem: GridsterItemComponentInterface) {
     this.pushedItems = [];
@@ -43,13 +44,16 @@ export class GridsterPush {
   }
 
   destroy(): void {
+    // @ts-ignore
     delete this.gridster;
+    // @ts-ignore
     delete this.gridsterItem;
   }
 
   pushItems(direction: string, disable?: boolean): boolean {
     if (this.gridster.$options.pushItems && !disable) {
       this.pushedItemsOrder = [];
+      this.iteration = 0;
       const pushed = this.push(this.gridsterItem, direction);
       if (!pushed) {
         this.restoreTempItems();
@@ -110,6 +114,10 @@ export class GridsterPush {
   }
 
   private push(gridsterItem: GridsterItemComponentInterface, direction: string): boolean {
+    if (this.iteration > 100) {
+      console.warn('max iteration reached');
+      return false;
+    }
     if (this.gridster.checkGridCollision(gridsterItem.$item)) {
       return false;
     }
@@ -135,8 +143,7 @@ export class GridsterPush {
     for (; i < conflicts.length; i++) {
       itemCollision = conflicts[i];
       if (itemCollision === this.gridsterItem) {
-        makePush = false;
-        break;
+        continue;
       }
       if (!itemCollision.canBeDragged()) {
         makePush = false;
@@ -176,6 +183,7 @@ export class GridsterPush {
         }
       }
     }
+    this.iteration++;
     return makePush;
   }
 
